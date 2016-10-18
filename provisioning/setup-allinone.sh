@@ -25,9 +25,6 @@ ipaddress=$(ip -4 addr show eth1 | grep -oP "(?<=inet ).*(?=/)")
 
 # Create bridges for Vlan type networks
 sudo ifconfig $VLAN_INTERFACE 0.0.0.0 up
-bridge=br-$VLAN_INTERFACE
-sudo ovs-vsctl add-br $bridge
-sudo ovs-vsctl add-port $bridge $VLAN_INTERFACE
 
 # Adjust local.conf
 cat << DEVSTACKEOF >> devstack/local.conf
@@ -46,6 +43,11 @@ enable_service q-dhcp
 enable_service q-l3
 enable_service tempest
 
+# Linuxbridge Settings
+Q_AGENT=linuxbridge
+LB_PHYSICAL_INTERFACE=$VLAN_INTERFACE
+LB_INTERFACE_MAPPINGS=$PHYSICAL_NETWORK:$VLAN_INTERFACE
+
 [[post-config|\$NEUTRON_CONF]]
 [DEFAULT]
 service_plugins=router,segments
@@ -54,7 +56,7 @@ service_plugins=router,segments
 [ml2]
 type_drivers=flat,vlan,vxlan
 tenant_network_types=vxlan,vlan
-mechanism_drivers=openvswitch,l2population
+mechanism_drivers=linuxbridge
 extension_drivers=port_security
 
 [ml2_type_vxlan]

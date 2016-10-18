@@ -15,9 +15,6 @@ ipaddress=$(ip -4 addr show eth1 | grep -oP "(?<=inet ).*(?=/)")
 
 # Create bridge for Vlan type networks
 sudo ifconfig $VLAN_INTERFACE 0.0.0.0 up
-bridge=br-$VLAN_INTERFACE
-sudo ovs-vsctl add-br $bridge
-sudo ovs-vsctl add-port $bridge $VLAN_INTERFACE
 
 # Adjust some things in local.conf
 cat << DEVSTACKEOF >> devstack/local.conf
@@ -38,10 +35,6 @@ VNCSERVER_PROXYCLIENT_ADDRESS=$ipaddress
 VNCSERVER_LISTEN=0.0.0.0
 
 [[post-config|/\$Q_PLUGIN_CONF_FILE]]
-[ovs]
-local_ip=$ipaddress
-bridge_mappings=$PHYSICAL_NETWORK:$bridge
-
 [agent]
 tunnel_types=vxlan
 l2_population=True
