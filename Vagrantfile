@@ -40,6 +40,7 @@ Vagrant.configure(2) do |config|
     allinone.vm.provider "virtualbox" do |vb|
        vb.memory = vagrant_config['allinone']['memory']
        vb.cpus = vagrant_config['allinone']['cpus']
+       vb.customize [ 'modifyvm', :id, '--nictype1', "virtio" ]
        vb.customize [
            'modifyvm', :id,
            '--nic3', "intnet"
@@ -71,6 +72,7 @@ Vagrant.configure(2) do |config|
     compute1.vm.provider "virtualbox" do |vb|
        vb.memory = vagrant_config['compute1']['memory']
        vb.cpus = vagrant_config['compute1']['cpus']
+       vb.customize [ 'modifyvm', :id, '--nictype1', "virtio" ]
        vb.customize [
            'modifyvm', :id,
            '--nic3', "intnet"
@@ -103,6 +105,7 @@ Vagrant.configure(2) do |config|
     compute2.vm.provider "virtualbox" do |vb|
        vb.memory = vagrant_config['compute2']['memory']
        vb.cpus = vagrant_config['compute2']['cpus']
+       vb.customize [ 'modifyvm', :id, '--nictype1', "virtio" ]
        vb.customize [
            'modifyvm', :id,
            '--nic3', "intnet"
@@ -146,6 +149,7 @@ Vagrant.configure(2) do |config|
     compute3.vm.provider "virtualbox" do |vb|
        vb.memory = vagrant_config['compute3']['memory']
        vb.cpus = vagrant_config['compute3']['cpus']
+       vb.customize [ 'modifyvm', :id, '--nictype1', "virtio" ]
        vb.customize [
            'modifyvm', :id,
            '--nic3', "intnet"
@@ -197,6 +201,7 @@ Vagrant.configure(2) do |config|
     iprouter.vm.provider "virtualbox" do |vb|
        vb.memory = vagrant_config['iprouter']['memory']
        vb.cpus = vagrant_config['iprouter']['cpus']
+       vb.customize [ 'modifyvm', :id, '--nictype1', "virtio" ]
        vb.customize [
            'modifyvm', :id,
            '--nic3', "intnet"
