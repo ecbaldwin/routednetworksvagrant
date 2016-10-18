@@ -90,8 +90,8 @@ devstack/stack.sh
 source devstack/openrc admin admin
 
 NET_ID=$(neutron net-create multinet --shared --segments type=dict list=true \
-    provider:physical_network=physnet1,provider:segmentation_id=$SEGMENTATION_ID,provider:network_type=vlan \
-    provider:physical_network=physnet2,provider:segmentation_id=$SEGMENTATION_ID,provider:network_type=vlan |
+    provider:physical_network=$PHYSICAL_NETWORK,provider:segmentation_id=$SEGMENTATION_ID,provider:network_type=vlan \
+    provider:physical_network=$COMPUTES_PHYSICAL_NETWORK,provider:segmentation_id=$SEGMENTATION_ID,provider:network_type=vlan |
     grep ' id ' |
     awk 'BEGIN{} {print $4} END{}')
 
@@ -108,12 +108,12 @@ TOKEN=$(curl -s -X POST http://localhost:5000/v2.0/tokens \
         }' \
     | jq -r .access.token.id)
 
-SEGMENT1_ID=$(curl -s -X GET http://localhost:9696/v2.0/segments?physical_network=physnet1\&network_id=$NET_ID \
+SEGMENT1_ID=$(curl -s -X GET http://localhost:9696/v2.0/segments?physical_network=$PHYSICAL_NETWORK\&network_id=$NET_ID \
     -H "Content-type: application/json" \
     -H "X-Auth-Token: $TOKEN" \
     | jq -r .segments[0].id)
 
-SEGMENT2_ID=$(curl -s -X GET http://localhost:9696/v2.0/segments?physical_network=physnet2\&network_id=$NET_ID \
+SEGMENT2_ID=$(curl -s -X GET http://localhost:9696/v2.0/segments?physical_network=$COMPUTES_PHYSICAL_NETWORK\&network_id=$NET_ID \
     -H "Content-type: application/json" \
     -H "X-Auth-Token: $TOKEN" \
     | jq -r .segments[0].id)
